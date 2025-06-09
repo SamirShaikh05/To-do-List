@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do WebApp</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #bfc9c9;
+            min-height: 100vh;
+        }
+
+        .container {
+            min-height: 50vh;
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            margin: 100px auto;
+            border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #Add_text {
+            flex: 1;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            padding: 0 20px;
+            font-size: 16px;
+        }
+
+        button {
+            height: 40px;
+            padding: 0 25px;
+            border: none;
+            border-radius: 25px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            margin: 8px 0;
+            background-color: #f8f9fa;
+            border-radius: 25px;
+            word-break: break-word;
+            position: relative;
+        }
+
+        .delete {
+            color: #dc3545;
+            cursor: pointer;
+            margin-left: 15px;
+            font-weight: bold;
+            background: none;
+            border: none;
+            padding: 0 8px;
+        }
+
+        .delete:hover {
+            color: #bb2d3b;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="input-group">
+            <input type="text" id="Add_text" placeholder="Add New Task">
+            <button onclick="Add_Task()">Add</button>
+        </div>
+        <ul id="lists"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', displayTask);
+
+        function Add_Task() {
+            let Add_Task = document.getElementById("Add_text")
+            let taskText = Add_Task.value.trim()
+            if (taskText === '') return;
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.push(taskText);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            displayTask();
+            Add_Task.value = '';
+        }
+
+        function deleteTask(index) {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.splice(index, 1);
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            displayTask();
+        }
+
+        function displayTask() {
+
+            let lists = document.getElementById("lists");
+            lists.innerHTML = "";
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+            tasks.forEach((task, index) => {
+                let li = document.createElement("li");
+
+                li.innerHTML = `<span>${task}</span>
+                    <button class="delete" onclick='deleteTask(${index})'>X</button>`;
+                lists.appendChild(li);
+            })
+        }
+    </script>
+
+</body>
+
+</html>
